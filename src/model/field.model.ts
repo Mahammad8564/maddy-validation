@@ -1,6 +1,3 @@
-import { FormGroup } from "@angular/forms";
-
-
 export class FieldValidation {
     public title: string;
     public type: string;
@@ -9,20 +6,19 @@ export class FieldValidation {
     public message: string;
     public params: Array<any> = [];
 
-    constructor(question, group?: FormGroup) {
+    constructor(question: any, group?: any) {
         this.title = question.title;
         this.type = question.type.name || question.type;
-        this.condition = question.condition || question.validation.condition.type;
+        this.condition = question.condition || ((question.validation || {}).condition || {}).type || '';
         this.currentValue = question.currentValue || group.controls[question.uid].value;
         this.params = question.params || [];
-        this.message = question.message || question.validation.condition.message || '';
+        this.message = question.message || ((question.validation || {}).condition || {}).message || '';
     }
 
-    setParams(value) {
+    setParams(value: any) {
         if (value || value == 0) {
-            this.params.push(value)
+            this.params.push(value);
         }
     }
 
 }
-

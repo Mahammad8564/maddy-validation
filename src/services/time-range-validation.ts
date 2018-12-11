@@ -1,19 +1,18 @@
-import { Injectable } from '@angular/core';
-
-import * as moment from 'moment-timezone'; 
-import { ValidationUtils } from '@app/core/validation/util/validation-utils';
+import * as moment from 'moment-timezone';
+import { ValidationUtils } from '../util/validation-utils';
+import { FieldValidation } from '../model/field.model';
 
 export class TimeRangeValidation {
 
-  //format replace 
-  question;
-  format; 
-  constructor(question, format = "HH:mm") {
+  question: FieldValidation;
+  format: string;
+
+  constructor(question: FieldValidation, format = "HH:mm") {
     this.question = question;
     this.format = format;
   }
 
-  gt(value: any, compareWith: Array<any>) {
+  gt(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = ValidationUtils.validateDate(value[0], (tmpCompareWith[0]), 'isAfter', this.format)
@@ -24,7 +23,7 @@ export class TimeRangeValidation {
     return { result: false, message: '' }
   }
 
-  lt(value, compareWith) {
+  lt(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = ValidationUtils.validateDate(value[0], (tmpCompareWith[0]), 'isBefore', this.format) &&
@@ -35,7 +34,7 @@ export class TimeRangeValidation {
     return { result: false, message: '' }
   }
 
-  lte(value, compareWith) {
+  lte(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = ValidationUtils.validateDate(value[0], (tmpCompareWith[0]), 'isSameOrBefore', this.format)
@@ -47,7 +46,7 @@ export class TimeRangeValidation {
   }
 
 
-  gte(value, compareWith) {
+  gte(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = ValidationUtils.validateDate(value[0], (tmpCompareWith[0]), 'isSameOrAfter', this.format)
@@ -59,7 +58,7 @@ export class TimeRangeValidation {
 
   }
 
-  eq(value, compareWith) {
+  eq(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = ValidationUtils.validateDate(value[0], (tmpCompareWith[0]), 'isSame', this.format)
@@ -71,7 +70,7 @@ export class TimeRangeValidation {
     return { result: false, message: '' }
   }
 
-  notEqual(value, compareWith) {
+  notEqual(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = (!ValidationUtils.validateDate(value[0], (tmpCompareWith[0]), 'isSame', this.format))
@@ -83,7 +82,7 @@ export class TimeRangeValidation {
     return { result: false, message: '' }
   }
 
-  between(value, compareWith) {
+  between(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = (moment(moment(value[0]).format(this.format), this.format)
@@ -97,7 +96,7 @@ export class TimeRangeValidation {
     return { result: false, message: '' }
   }
 
-  notBetween(value, compareWith) {
+  notBetween(value: Array<Date | string>, compareWith: Array<any>) {
     let tmpCompareWith = ValidationUtils.fieldBifurcation(compareWith)
     if (ValidationUtils.returnNull(tmpCompareWith)) {
       let result = (!(moment(moment(value[0]).format(this.format), this.format)

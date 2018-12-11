@@ -1,23 +1,18 @@
 
-import { TextValidation } from '@app/core/validation/services/text-validation';
-import { CheckboxValidation } from '@app/core/validation/services/checkbox-validation';
-import { DateRangeValidation } from '@app/core/validation/services/date-range-validation';
-import { DateValidation } from '@app/core/validation/services/date-validation';
-import { TimeRangeValidation } from '@app/core/validation/services/time-range-validation';
-import { MultiSelectDropDownValidation } from '@app/core/validation/services/multi-select-drop-down-validation';
-import { TimeValidation } from '@app/core/validation/services/time-validation';
-import { NumberValidationService } from '@app/core/validation/services/number-validation';
-import { Injectable } from '@angular/core';
-import { ValidationUtils } from '@app/core/validation/util/validation-utils';
-import { FieldValidation } from '@app/core/validation/model/field.model';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
+import { TextValidation } from './services/text-validation';
+import { CheckboxValidation } from './services/checkbox-validation';
+import { DateRangeValidation } from './services/date-range-validation';
+import { DateValidation } from './services/date-validation';
+import { TimeRangeValidation } from './services/time-range-validation';
+import { MultiSelectDropDownValidation } from './services/multi-select-drop-down-validation';
+import { TimeValidation } from './services/time-validation';
+import { NumberValidationService } from './services/number-validation';
+import { ValidationUtils } from './util/validation-utils';
+import { FieldValidation } from './model/field.model';
 
 export class Validation {
 
-  static getInstance(question: FieldValidation) {
+  static getInstance(question: FieldValidation): NumberValidationService | MultiSelectDropDownValidation | DateValidation | DateRangeValidation | TimeValidation | TimeRangeValidation | CheckboxValidation | TextValidation {
     switch (question.type) {
       case 'number':
       case 'currency':
@@ -55,20 +50,14 @@ export class Validation {
     }
   }
 
-
-
-  static validate(question) {
+  static validate(question: FieldValidation) {
     if (question) {
       let params = ValidationUtils.hasEmptyValue(question.params);
       if (params && question.condition) {
         const validationInstance = Validation.getInstance(question);
         return validationInstance[question.condition](question.currentValue, question.params);
       }
-    } 
+    }
   }
-
-
-
-
 
 }

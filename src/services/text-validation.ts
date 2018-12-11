@@ -1,28 +1,28 @@
-import * as _ from 'lodash';
-import { ValidationUtils } from '@app/core/validation/util/validation-utils';
+import { ValidationUtils } from '../util/validation-utils';
+import { FieldValidation } from '../model/field.model';
 
 export class TextValidation {
 
-  question;
-  constructor(question) {
+  question: FieldValidation;
+  constructor(question: FieldValidation) {
     this.question = question;
   }
 
-  gt(value: any, compareWith: Array<any>) {
+  gt(value: string, compareWith: Array<string>) {
     let compareValue = ValidationUtils.toNumber(compareWith[0]);
     let result = (value.length > compareValue);
     let message = this.question.message || `${this.question.title} must be greater than ${compareValue}`;
     return { result: result, message: message };
   }
 
-  lt(value: any, compareWith:Array<any>) {
+  lt(value: string, compareWith: Array<string>) {
     let compareValue = ValidationUtils.toNumber(compareWith[0])
     let result = (value.length < compareValue)
     let message = this.question.message || `${this.question.title} must be less than ${compareValue}`;
     return { result: result, message: message };
   }
 
-  lte(value: any, compareWith:Array<any>) {
+  lte(value: string, compareWith: Array<string>) {
     let compareValue = ValidationUtils.toNumber(compareWith[0]);
     let result = (value.length <= compareValue)
     let message = this.question.message || `${this.question.title} must be less than or equal to ${compareValue}`;
@@ -30,7 +30,7 @@ export class TextValidation {
   }
 
 
-  gte(value: any, compareWith:Array<any>) {
+  gte(value: string, compareWith: Array<string>) {
     let compareValue = ValidationUtils.toNumber(compareWith[0])
     let result = (value.length >= compareValue)
     let message = this.question.message || `${this.question.title} must be greater than or equal to ${compareValue}`;
@@ -38,7 +38,7 @@ export class TextValidation {
 
   }
 
-  eq(value: any, compareWith:Array<any>) {
+  eq(value: string, compareWith: Array<string>) {
     let compareValue = ValidationUtils.toNumber(compareWith[0])
     let result = (value.length == compareValue)
     let message = this.question.message || `${this.question.title} must be equal to ${compareValue}`;
@@ -46,14 +46,14 @@ export class TextValidation {
 
   }
 
-  notEqual(value: any, compareWith:Array<any>) {
+  notEqual(value: string, compareWith: Array<string>) {
     let compareValue = ValidationUtils.toNumber(compareWith[0])
     let result = (value.length != compareValue)
     let message = this.question.message || `${this.question.title} must be not equal to ${compareWith[0]}`;
     return { result: result, message: message }
   }
 
-  between(value: any, compareWith:Array<any>) {
+  between(value: string, compareWith: Array<string>) {
     let firstValue = ValidationUtils.toNumber(compareWith[0])
     let secondValue = ValidationUtils.toNumber(compareWith[1])
 
@@ -62,7 +62,7 @@ export class TextValidation {
     return { result: result, message: message }
   }
 
-  notBetween(value: any, compareWith:Array<any>) {
+  notBetween(value: string, compareWith: Array<string>) {
     let firstValue = ValidationUtils.toNumber(compareWith[0])
     let secondValue = ValidationUtils.toNumber(compareWith[1]);
     let result = (!((value.length >= firstValue) && (value.length <= secondValue)))
@@ -70,39 +70,39 @@ export class TextValidation {
     return { result: result, message: message }
   };
 
-  sameAs(value: any, compareWith:Array<any>) {
+  sameAs(value: string, compareWith: Array<string>) {
     let result = (value == compareWith[0])
     let message = this.question.message || `${this.question.title} must be equal to ${compareWith[0]}`;
     return { result: result, message: message }
   };
 
-  notSame(value: any, compareWith:Array<any>) {
+  notSame(value: string, compareWith: Array<string>) {
     let result = (value != compareWith[0])
     let message = this.question.message || `${this.question.title} must be equal to ${compareWith[0]}`;
     return { result: result, message: message }
   };
 
 
-  contains(value: any, compareWith:Array<string>) {
+  contains(value: string, compareWith: Array<string>) {
     let result = (value.includes(compareWith[0]))
     let message = this.question.message || `${this.question.title} must contain ${compareWith[0]}`;
     return { result: result, message: message }
   }
 
-  notContains(value: any, compareWith:Array<string>) {
+  notContains(value: string, compareWith: Array<string>) {
     let result = (!(value.includes(compareWith[0])));
     let message = this.question.message || `${this.question.title} must not contain ${compareWith[0]}`;
     return { result: result, message: message };
   }
 
-  startwith(value: any, compareWith:Array<string>) {
-    let result = ((compareWith[0]).startsWith(value))
+  startwith(value: string, compareWith: Array<string>) {
+    let result = ((value || '').startsWith(compareWith[0]))
     let message = this.question.message || `${this.question.title} must be start with ${compareWith[0]}`;
     return { result: result, message: message }
   };
 
-  endswith(value: any, compareWith:Array<string>) {
-    let result = (compareWith[0].endsWith(value))
+  endswith(value: string, compareWith: Array<string>) {
+    let result = ((value || '').endsWith(compareWith[0]))
     let message = this.question.message || `${this.question.title} must ends with ${compareWith[0]}`;
     return { result: result, message: message }
   };
