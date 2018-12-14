@@ -12,6 +12,28 @@ import { FieldValidation } from './model/field.model';
 
 export class Validation {
 
+  static validate(question: FieldValidation) {
+    if (question) {
+      let params = ValidationUtils.hasEmptyValue(question.params);
+      if (params && question.condition) {
+        const validationInstance = Validation.getInstance(question);
+        return validationInstance[question.condition](question.currentValue, question.params);
+      }
+    }
+  }
+
+
+  static validateWithGroup(entrys: Object, schema: Object) {
+    let questions = ValidationUtils.getFieldsByType(schema)
+
+    let validations = {};
+    (questions || []).forEach(question => { 
+      validations[question.uid] = Validation.validate(ValidationUtils.makeSimpleQuestion(question, entrys));
+    });
+    return validations;
+  }
+
+
   static getInstance(question: FieldValidation): NumberValidationService | MultiSelectDropDownValidation | DateValidation | DateRangeValidation | TimeValidation | TimeRangeValidation | CheckboxValidation | TextValidation {
     switch (question.type) {
       case 'number':
@@ -50,14 +72,6 @@ export class Validation {
     }
   }
 
-  static validate(question: FieldValidation) {
-    if (question) {
-      let params = ValidationUtils.hasEmptyValue(question.params);
-      if (params && question.condition) {
-        const validationInstance = Validation.getInstance(question);
-        return validationInstance[question.condition](question.currentValue, question.params);
-      }
-    }
-  }
+
 
 }

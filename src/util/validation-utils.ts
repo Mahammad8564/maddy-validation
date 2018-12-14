@@ -1,4 +1,5 @@
 import * as moment from 'moment-timezone';
+import { FieldValidation } from '../model/field.model';
 
 export class ValidationUtils {
 
@@ -45,5 +46,47 @@ export class ValidationUtils {
       return !item
     });
   }
+
+
+  static getFieldsByType(arrayOrObject) {
+    const questions = [];
+    if (!arrayOrObject) {
+      return questions;
+    }
+    (arrayOrObject.blocks || arrayOrObject.sections || arrayOrObject.fields || arrayOrObject).forEach((block) => {
+      (block.sections || block.fields || [block]).forEach((section) => {
+        (section.fields || [section]).forEach((field) => {
+          const newField = JSON.parse(JSON.stringify(field));
+          questions.push(newField);
+        });
+      });
+    });
+    return questions;
+  }
+
+
+  static makeSimpleQuestion(question: any, entry: object) { 
+    let questionConfig = new FieldValidation(question,entry)
+     
+    const makeSimpleQuestionClosure = (type) => {
+      if (
+        question && question.validation &&
+        question.validation.condition &&
+        question.validation.condition[type] &&
+        question.validation.condition[type].value
+      ) {
+        let tempValue = question.validation.condition[type].value;
+        let value = (question.validation.condition[type].type === 'field') ? entry[question.uid] : tempValue;
+
+        questionConfig.setParams(value)
+      }
+    }
+
+    makeSimpleQuestionClosure('min');
+    makeSimpleQuestionClosure('max');
+  
+    return questionConfig;
+  }
+
 
 }
