@@ -47,6 +47,9 @@ export class ValidationUtils {
     });
   }
 
+  static isRequired(question: FieldValidation) {
+    return { result: false, message: question.title + ' is Required' }
+  }
 
   static getFieldsByType(arrayOrObject) {
     const questions = [];
@@ -65,9 +68,9 @@ export class ValidationUtils {
   }
 
 
-  static makeSimpleQuestion(question: any, entry: object) { 
-    let questionConfig = new FieldValidation(question,entry)
-     
+  static makeSimpleQuestion(question: any, entry: object) {
+    let questionConfig = new FieldValidation(question, entry)
+
     const makeSimpleQuestionClosure = (type) => {
       if (
         question && question.validation &&
@@ -76,7 +79,7 @@ export class ValidationUtils {
         question.validation.condition[type].value
       ) {
         let tempValue = question.validation.condition[type].value;
-        let value = (question.validation.condition[type].type === 'field') ? entry[question.uid] : tempValue ;
+        let value = (question.validation.condition[type].type === 'field') ? entry[question.uid] : tempValue;
 
         questionConfig.setParams(value)
       }
@@ -84,7 +87,7 @@ export class ValidationUtils {
 
     makeSimpleQuestionClosure('min');
     makeSimpleQuestionClosure('max');
-  
+
     return questionConfig;
   }
 

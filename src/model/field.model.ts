@@ -5,15 +5,16 @@ export class FieldValidation {
     public currentValue: any;
     public message: string;
     public params: Array<any> = [];
-    public uid?:string;
-
+    public uid?: string;
+    public required?: boolean;
     constructor(question: any, group?: any) {
-        this.title = question.title;
+        this.title = question.title || '';
         this.type = question.type.name || question.type;
-        this.condition = question.condition ||    ((question.validation || {}).condition || {}).type || '';
+        this.condition = question.condition || ((question.validation || {}).condition || {}).type || '';
         this.currentValue = question.currentValue || group[question.uid] || group.controls[question.uid].value || '';
         this.params = question.params || [];
         this.message = question.message || ((question.validation || {}).condition || {}).message || '';
+        this.required = question.required || question.validation.required.enabled || false;
     }
 
     setParams(value: any) {
@@ -22,8 +23,17 @@ export class FieldValidation {
         }
     }
 
-    setInput(value){
-        this.currentValue=value
+    setInput(value) {
+        this.currentValue = value
     }
 
+}
+
+export class FieldValidationMessage{
+    result:boolean;
+    message:string;
+    constructor(validation){
+        this.result=validation.result;
+        this.message=validation.message;
+    }
 }
