@@ -18,9 +18,10 @@ export class Validation {
       if (question.required && question.currentValue == null || '') {
         return ValidationUtils.isRequired(question);
       }
-      
+
       if (params && question.condition) {
         const validationInstance = Validation.getInstance(question);
+        
         return validationInstance[question.condition](question.currentValue, question.params);
       } else {
         return { result: false, message: '' }
@@ -29,14 +30,13 @@ export class Validation {
   }
 
 
-  static validateWithGroup(entrys: Object, schema: Object, requiredValidation?: object) {
+  static validateWithGroup(entrys: Object, schema: Object) {
     let questions = ValidationUtils.getFieldsByType(schema)
 
     let validations = {};
-    (questions || []).forEach(question => {
-
-      if (entrys[question.uid] && requiredValidation[question.uid]) {
-        validations[question.uid] = Validation.validate(ValidationUtils.makeSimpleQuestion(question, entrys));
+    (questions || []).forEach(question => { 
+      if (entrys[question.uid]) {
+        validations[question.uid] = Validation.validate(this.makeSimpleQuestion(question, entrys)); 
       }
       else {
         validations[question.uid] = { result: true, message: '' }
@@ -46,6 +46,28 @@ export class Validation {
     return validations;
   }
 
+  static makeSimpleQuestion(question: any, entry: object) {
+    let questionConfig = new FieldValidation(question, entry)
+
+    const makeSimpleQuestionClosure = (type) => {
+      if (
+        question && question.validation &&
+        question.validation.condition &&
+        question.validation.condition[type] &&
+        question.validation.condition[type].value
+      ) {
+        let tempValue = question.validation.condition[type].value;
+        let value = (question.validation.condition[type].type === 'field') ? entry[tempValue] : tempValue;
+
+        questionConfig.setParams(value)
+      }
+    }
+
+    makeSimpleQuestionClosure('min');
+    makeSimpleQuestionClosure('max');
+
+    return questionConfig;
+  }
 
   static getInstance(question: FieldValidation): NumberValidationService | MultiSelectDropDownValidation | DateValidation | DateRangeValidation | TimeValidation | TimeRangeValidation | CheckboxValidation | TextValidation {
     switch (question.type) {

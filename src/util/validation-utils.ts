@@ -68,28 +68,6 @@ export class ValidationUtils {
   }
 
 
-  static makeSimpleQuestion(question: any, entry: object) {
-    let questionConfig = new FieldValidation(question, entry)
-
-    const makeSimpleQuestionClosure = (type) => {
-      if (
-        question && question.validation &&
-        question.validation.condition &&
-        question.validation.condition[type] &&
-        question.validation.condition[type].value
-      ) {
-        let tempValue = question.validation.condition[type].value;
-        let value = (question.validation.condition[type].type === 'field') ? entry[question.uid] : tempValue;
-
-        questionConfig.setParams(value)
-      }
-    }
-
-    makeSimpleQuestionClosure('min');
-    makeSimpleQuestionClosure('max');
-
-    return questionConfig;
-  }
 
 
 }
