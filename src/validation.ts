@@ -20,8 +20,7 @@ export class Validation {
       }
 
       if (params && question.condition) {
-        const validationInstance = Validation.getInstance(question);
-        
+        const validationInstance = Validation.getInstance(question);   
         return validationInstance[question.condition](question.currentValue, question.params);
       } else {
         return { result: false, message: '' }
