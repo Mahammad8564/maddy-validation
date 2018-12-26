@@ -41,21 +41,21 @@ export class FieldValidationMessage {
 export class SectionLunchCondition {
     public title: string;
     public type: string;
-    public bool:string;
+    public bool: string;
     public condition: string;
     public currentValue: any;
     public message: string;
     public params: Array<any> = [];
-    public uid?: string  ;
+    public uid?: string;
     public required?: boolean;
-    constructor(question,group) {
-        this.type = question.coondtion;
-        this.currentValue = question.leftOprator  || '';
+    constructor(question, group) {
+        this.type = question.type;
+        this.currentValue = group[question.leftOperand] || '';
         this.condition = question.comparison;
-        this.bool=question.bool;
-        this.params=[question.rightOperand];
-        this.uid=question.uid 
-        this.required = question.required   || false;
+        this.bool = question.bool;
+        this.params = [question.rightOperand];
+        this.uid = question.uid || '';
+        this.required = question.required || false;
 
     }
 }

@@ -47,26 +47,23 @@ export class Validation {
     return validations;
   }
 
- 
 
-  static sectionExcutionValidation(multipleCondition: Array<any>, schema: any,entry:any) {
-    let results = {}
+
+  static sectionExcutionValidation(multipleCondition: Array<any>, schema: any, entry: any) {
+    let validation;
     let questions = ValidationUtils.getFieldsByType(schema)
-    multipleCondition.forEach((element, index) => {
-      element.leftOperand= element.leftOperand.split('-')[2]
-      element['type'] = questions.find(item =>{ return item.uid == element.leftOperand  }).type.name;
-      if(index!=0){
-        element['bool'] = element.bool ? (element.bool == 'or' ? '||' : '&&') : '';
-      }else{
-        element['bool'] =''
-      } 
-      results[index] = this.validate(new SectionLunchCondition(element, entry))
-    }); 
-    
     let condition: string = ''
-    multipleCondition.forEach((item, index) => {
-      condition +=  (item.bool || '') +  (results[index].result)  
-    }) 
+    multipleCondition.forEach((element, index) => {
+      element.leftOperand = element.leftOperand.split('-')[(element.leftOperand).length - 1]
+      element['type'] = questions.find(item => { return item.uid == element.leftOperand }).type.name;
+      if (index != 0) {
+        element['bool'] = element.bool ? (element.bool == 'or' ? '||' : '&&') : '';
+      } else {
+        element['bool'] = ''
+      }
+      validation = this.validate(new SectionLunchCondition(element, entry))
+      condition += (element.bool || '') + (validation.result)
+    }); 
     return eval(condition)
   }
 
