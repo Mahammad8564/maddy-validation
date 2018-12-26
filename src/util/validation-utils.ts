@@ -1,5 +1,5 @@
 import * as moment from 'moment-timezone';
-import { FieldValidation } from '../model/field.model';
+import { FieldValidation, SectionLunchCondition } from '../model/field.model';
 
 export class ValidationUtils {
 
@@ -47,7 +47,7 @@ export class ValidationUtils {
     });
   }
 
-  static isRequired(question: FieldValidation) {
+  static isRequired(question: FieldValidation | SectionLunchCondition) {
     return { result: false, message: question.title + ' is Required' }
   }
 

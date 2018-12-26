@@ -8,11 +8,11 @@ import { MultiSelectDropDownValidation } from './services/multi-select-drop-down
 import { TimeValidation } from './services/time-validation';
 import { NumberValidationService } from './services/number-validation';
 import { ValidationUtils } from './util/validation-utils';
-import { FieldValidation } from './model/field.model';
+import { FieldValidation, SectionLunchCondition } from './model/field.model';
 
 export class Validation {
 
-  static validate(question: FieldValidation) {
+  static validate(question: FieldValidation | SectionLunchCondition) {
     if (question) {
       let params = ValidationUtils.hasEmptyValue(question.params);
       if (question.required && question.currentValue == null || '') {
@@ -20,7 +20,7 @@ export class Validation {
       }
 
       if (params && question.condition) {
-        const validationInstance = Validation.getInstance(question);   
+        const validationInstance = Validation.getInstance(question);
         return validationInstance[question.condition](question.currentValue, question.params);
       } else {
         return { result: false, message: '' }
@@ -29,20 +29,45 @@ export class Validation {
   }
 
 
-  static validateWithGroup(entrys: Object, schema: Object) {
+  static validateWithGroup(entrys: Object, schema: Object, touchedFields?: object) {
     let questions = ValidationUtils.getFieldsByType(schema)
 
     let validations = {};
-    (questions || []).forEach(question => { 
-      if (entrys[question.uid]) {
-        validations[question.uid] = Validation.validate(this.makeSimpleQuestion(question, entrys)); 
+    (questions || []).forEach(question => {
+      touchedFields[question.uid] = touchedFields[question.uid] ? touchedFields[question.uid] : true
+      if (entrys[question.uid] && touchedFields[question.uid]) {
+        validations[question.uid] = Validation.validate(this.makeSimpleQuestion(question, entrys));
       }
       else {
         validations[question.uid] = { result: true, message: '' }
       }
+
     });
     validations['result'] = (<any>Object).values(validations).every(question => question.result)
     return validations;
+  }
+
+ 
+
+  static sectionExcutionValidation(multipleCondition: Array<any>, schema: any,entry:any) {
+    let results = {}
+    let questions = ValidationUtils.getFieldsByType(schema)
+    multipleCondition.forEach((element, index) => {
+      element.leftOperand= element.leftOperand.split('-')[2]
+      element['type'] = questions.find(item =>{ return item.uid == element.leftOperand  }).type.name;
+      if(index!=0){
+        element['bool'] = element.bool ? (element.bool == 'or' ? '||' : '&&') : '';
+      }else{
+        element['bool'] =''
+      } 
+      results[index] = this.validate(new SectionLunchCondition(element, entry))
+    }); 
+    
+    let condition: string = ''
+    multipleCondition.forEach((item, index) => {
+      condition +=  (item.bool || '') +  (results[index].result)  
+    }) 
+    return eval(condition)
   }
 
   static makeSimpleQuestion(question: any, entry: object) {
@@ -68,7 +93,7 @@ export class Validation {
     return questionConfig;
   }
 
-  static getInstance(question: FieldValidation): NumberValidationService | MultiSelectDropDownValidation | DateValidation | DateRangeValidation | TimeValidation | TimeRangeValidation | CheckboxValidation | TextValidation {
+  static getInstance(question: FieldValidation | SectionLunchCondition): NumberValidationService | MultiSelectDropDownValidation | DateValidation | DateRangeValidation | TimeValidation | TimeRangeValidation | CheckboxValidation | TextValidation {
     switch (question.type) {
       case 'number':
       case 'currency':

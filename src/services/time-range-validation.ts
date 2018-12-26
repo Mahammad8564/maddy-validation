@@ -1,13 +1,13 @@
 import * as moment from 'moment-timezone';
 import { ValidationUtils } from '../util/validation-utils';
-import { FieldValidation } from '../model/field.model';
+import { FieldValidation, SectionLunchCondition } from '../model/field.model';
 
 export class TimeRangeValidation {
 
-  question: FieldValidation;
+  question: FieldValidation | SectionLunchCondition;
   format: string;
 
-  constructor(question: FieldValidation, format = "HH:mm") {
+  constructor(question: FieldValidation | SectionLunchCondition, format = "HH:mm") {
     this.question = question;
     this.format = format;
   }

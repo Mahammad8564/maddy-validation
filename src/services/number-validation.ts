@@ -1,9 +1,9 @@
-import { FieldValidation } from "../model/field.model";
+import { FieldValidation, SectionLunchCondition } from "../model/field.model";
 
 export class NumberValidationService {
-  question: FieldValidation;
+  question: FieldValidation | SectionLunchCondition;
 
-  constructor(question: FieldValidation) {
+  constructor(question: FieldValidation | SectionLunchCondition) {
     this.question = question;
   }
 

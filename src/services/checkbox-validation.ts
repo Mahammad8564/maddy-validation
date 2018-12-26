@@ -1,9 +1,9 @@
 import { ValidationUtils } from '../util/validation-utils';
-import { FieldValidation } from '../model/field.model';
+import { FieldValidation, SectionLunchCondition } from '../model/field.model';
 
 export class CheckboxValidation {
-  question: FieldValidation;
-  constructor(question: FieldValidation) {
+  question: FieldValidation | SectionLunchCondition;
+  constructor(question: FieldValidation| SectionLunchCondition) {
     this.question = question;
   }
 
