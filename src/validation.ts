@@ -54,7 +54,8 @@ export class Validation {
     let questions = ValidationUtils.getFieldsByType(schema)
     let condition: string = ''
     multipleCondition.forEach((element, index) => {
-      element.leftOperand = element.leftOperand.split('-')[(element.leftOperand).length - 1]
+      let length = element.leftOperand.split('-').length - 1;
+      element.leftOperand = element.leftOperand.split('-')[length]
       element['type'] = questions.find(item => { return item.uid == element.leftOperand }).type.name;
       if (index != 0) {
         element['bool'] = element.bool ? (element.bool == 'or' ? '||' : '&&') : '';
@@ -62,7 +63,7 @@ export class Validation {
         element['bool'] = ''
       }
       validation = this.validate(new SectionLunchCondition(element, entry))
-      condition += (element.bool || '') + (validation.result)
+      condition += (element.bool || '') + (validation.result) 
     }); 
     return eval(condition)
   }

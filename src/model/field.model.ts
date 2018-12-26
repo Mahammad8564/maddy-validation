@@ -50,6 +50,7 @@ export class SectionLunchCondition {
     public required?: boolean;
     constructor(question, group) {
         this.type = question.type;
+        this.title=question.title || '';
         this.currentValue = group[question.leftOperand] || '';
         this.condition = question.comparison;
         this.bool = question.bool;
