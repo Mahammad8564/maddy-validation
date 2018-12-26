@@ -49,7 +49,7 @@ export class Validation {
 
 
 
-  static sectionExcutionValidation(multipleCondition: Array<any>, schema: any, entry: any) {
+  static sectionExcutionValidation(multipleCondition: Array<any>, schema: any, entry: any):boolean {
     let validation;
     let questions = ValidationUtils.getFieldsByType(schema)
     let condition: string = ''
