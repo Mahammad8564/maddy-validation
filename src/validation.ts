@@ -47,11 +47,13 @@ export class Validation {
     return validations;
   }
 
+
+
  
-  static sectionExcutionValidation(multipleCondition, schema, entry, aceptanceStatus) {
+  static sectionExcutionValidation(multipleCondition: Array<any>, schema:any, entry:any, aceptanceStatus:any) {
     let validation;
     let questions = ValidationUtils.getFieldsByType(schema);
-    let condition = '';
+    let condition:string = '';
     multipleCondition.forEach((element, index) => {
       if (index != 0) {
         element['bool'] = element.bool ? (element.bool == 'or' ? '||' : '&&') : '';
@@ -65,7 +67,7 @@ export class Validation {
         element['type'] = questions.find(item => {
           return item.uid == element.leftOperand;
         }).type.name;
-        validation = this.validate(new field_model_1.SectionLunchCondition(element, entry));
+        validation = this.validate(new SectionLunchCondition(element, entry));
         condition += (element.bool || '') + (validation.result);
       } else {
         condition += (element.bool || '') + aceptanceStatus.find(z => z.key == leftOperand[leftOperand.length - 1]).value;
