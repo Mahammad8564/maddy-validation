@@ -23,7 +23,7 @@ export class Validation {
         const validationInstance = Validation.getInstance(question);
         return validationInstance[question.condition](question.currentValue, question.params);
       } else {
-        return { result: false, message: '' }
+        return { result: true, message: '' }
       }
     }
   }
