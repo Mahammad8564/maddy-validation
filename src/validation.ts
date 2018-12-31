@@ -47,25 +47,31 @@ export class Validation {
     return validations;
   }
 
-
-
-  static sectionExcutionValidation(multipleCondition: Array<any>, schema: any, entry: any):boolean {
+ 
+  static sectionExcutionValidation(multipleCondition, schema, entry, aceptanceStatus) {
     let validation;
-    let questions = ValidationUtils.getFieldsByType(schema)
-    let condition: string = ''
+    let questions = ValidationUtils.getFieldsByType(schema);
+    let condition = '';
     multipleCondition.forEach((element, index) => {
-      let length = element.leftOperand.split('-').length - 1;
-      element.leftOperand = element.leftOperand.split('-')[length]
-      element['type'] = questions.find(item => { return item.uid == element.leftOperand }).type.name;
       if (index != 0) {
         element['bool'] = element.bool ? (element.bool == 'or' ? '||' : '&&') : '';
       } else {
-        element['bool'] = ''
+        element['bool'] = '';
       }
-      validation = this.validate(new SectionLunchCondition(element, entry))
-      condition += (element.bool || '') + (validation.result) 
-    }); 
-    return eval(condition)
+      const leftOperand = element.leftOperand.split('-');
+      if (!element.comparison.includes(['pass', 'fail'])) {
+        element.leftOperand = leftOperand[leftOperand.length - 1];
+
+        element['type'] = questions.find(item => {
+          return item.uid == element.leftOperand;
+        }).type.name;
+        validation = this.validate(new field_model_1.SectionLunchCondition(element, entry));
+        condition += (element.bool || '') + (validation.result);
+      } else {
+        condition += (element.bool || '') + aceptanceStatus.find(z => z.key == leftOperand[leftOperand.length - 1]).value;
+      }
+    });
+    return eval(condition);
   }
 
   static makeSimpleQuestion(question: any, entry: object) {
