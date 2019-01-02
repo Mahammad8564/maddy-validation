@@ -15,14 +15,14 @@ export class Validation {
   static validate(question: FieldValidation | SectionLunchCondition) {
     if (question) {
       let params = ValidationUtils.hasEmptyValue(question.params);
-      if (question.required && question.currentValue == null || '') {
-        return ValidationUtils.isRequired(question);
-      }
-
+   
+     
+      
       if (params && question.condition) {
         const validationInstance = Validation.getInstance(question);
         return validationInstance[question.condition](question.currentValue, question.params);
-      } else {
+      } 
+      else {
         return { result: true, message: '' }
       }
     }
@@ -31,12 +31,21 @@ export class Validation {
 
   static validateWithGroup(entrys: Object, schema: Object, touchedFields?: object) {
     let questions = ValidationUtils.getFieldsByType(schema)
-
+    if(!touchedFields){
+      touchedFields={}
+    } 
+    
     let validations = {};
     (questions || []).forEach(question => {
-      touchedFields[question.uid] = touchedFields[question.uid] ? touchedFields[question.uid] : true
-      if (entrys[question.uid] && touchedFields[question.uid]) {
-        validations[question.uid] = Validation.validate(this.makeSimpleQuestion(question, entrys));
+      touchedFields[question.uid] =( touchedFields && touchedFields[question.uid]) ? touchedFields[question.uid] : true
+      
+      let singalQuestion = this.makeSimpleQuestion(question, entrys);
+      if (singalQuestion.required && singalQuestion.currentValue == '') {
+        validations[question.uid]= ValidationUtils.isRequired(singalQuestion);
+      }
+
+      else if (entrys[question.uid] && touchedFields[question.uid]) {
+        validations[question.uid] = Validation.validate(singalQuestion);
       }
       else {
         validations[question.uid] = { result: true, message: '' }
@@ -78,7 +87,7 @@ export class Validation {
 
   static makeSimpleQuestion(question: any, entry: object) {
     let questionConfig = new FieldValidation(question, entry)
-
+    
     const makeSimpleQuestionClosure = (type) => {
       if (
         question && question.validation &&

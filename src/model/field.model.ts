@@ -11,7 +11,7 @@ export class FieldValidation {
         this.title = question.title || '';
         this.type = question.type.name || question.type;
         this.condition = question.condition || ((question.validation || {}).condition || {}).type || '';
-        this.currentValue = question.currentValue || group[question.uid] || group.controls[question.uid].value || '';
+        this.currentValue = question.currentValue || group[question.uid]  || '';
         this.params = question.params || [];
         this.message = question.message || ((question.validation || {}).condition || {}).message || '';
         this.required = question.required || question.validation.required.enabled || false;
