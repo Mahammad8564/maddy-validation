@@ -49,8 +49,7 @@ export class Validation {
       }
       else {
         validations[question.uid] = { result: true, message: '' }
-      }
-
+      } 
     });
     validations['result'] = (<any>Object).values(validations).every(question => question.result)
     return validations;
